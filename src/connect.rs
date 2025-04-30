@@ -76,12 +76,12 @@ async fn connect(
 
     let stream = match proxy {
         None => {
-            println!("没有代理");
+            // println!("没有代理");
             let stream = connect_to(domain, port).await?;
             stream
         }
         Some(p) => {
-            println!("代理");
+            // println!("代理");
             let stream = connect_to_proxy(domain, port, p).await?;
             stream
         }
@@ -96,7 +96,7 @@ async fn connect(
 //获取不走代理的 TcpStream
 async fn connect_to(domain: &str, port: u16) -> Result<TcpStream, Error> {
     let addr = format!("{domain}:{port}");
-    println!("域名解析：{}", addr);
+    // println!("域名解析：{}", addr);
     if let Ok(stream) = TcpStream::connect(addr).await {
         return Ok(stream);
     }
@@ -107,7 +107,7 @@ async fn connect_to(domain: &str, port: u16) -> Result<TcpStream, Error> {
 async fn connect_to_proxy(domain: &str, port: u16, proxy: SocketAddr) -> Result<TcpStream, Error> {
     let addrs = (domain, port).to_socket_addrs().unwrap();
     for addr in addrs.as_slice() {
-        println!("域名解析：{}", addr);
+        // println!("域名解析：{}", addr);
         if let Ok(socks5_stream) = Socks5Stream::connect(proxy, (domain, port)).await {
             let stream = socks5_stream.into_inner();
             return Ok(stream);
